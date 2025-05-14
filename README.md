@@ -1,6 +1,8 @@
 # DonInf2 Starting Code
 This some boiler plate code for the DonInf2 course project. Use this code as starting point for your project.
 
+//Pierre
+
 ## Setup
 ### 1. Repository On Github
 First you need to get a copy of this repository, the best approach is to fork this repository. a fork is a github specific functionality, it creates your own copy of a repository. You need a github account in order to fork a repository.
