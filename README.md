@@ -1,5 +1,5 @@
 # DonInf2 Starting Code
-This some boiler plate code for the DonInf2 course project. Use this code as starting point for your project.
+This some boiler plate code for the DonInf2 course project. Use this code as starting point for your project. Raul
 
 //Pierre
 
@@ -62,4 +62,5 @@ A few string manipulation examples are found in the `src/exemples` folder and ca
 ## About this README
 Feel free to edit this README as well, it's yours :)
 The format of this file is [markdown](https://markdownlivepreview.com/)
-
+Romain
+Hello Raul
