@@ -1,6 +1,6 @@
 package main;
 
-public class Location {
+public class Location implements IPrintable {
     private String nom;
     private String descr;
     private boolean etat;
@@ -41,6 +41,18 @@ public class Location {
 
     public void unlockLocation(){
         etat=false;
+    }
+
+    @Override
+    public String getPrintableString() {
+        if (isLocked) return "X";        // verrouillé
+        else if (isVisited) return "O";  // déjà visité
+        else return " ";                // accessible
+    }
+
+    @Override
+    public boolean isGrayedOut() {
+        return !isVisited; //griser si jamais visité
     }
 
 }
