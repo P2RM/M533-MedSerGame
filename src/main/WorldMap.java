@@ -1,42 +1,40 @@
 package main;
 
 public class WorldMap {
-    private int[][] carte = new int[15][15];
-    private boolean locationIsLocked;
-    private Location location;
+    private Location[][] carte;
+    private Location playerLocation;
 
-   
-    public WorldMap(int[][] carte, boolean locationIsLocked, Location location) {
-        this.carte=carte;
-        this.locationIsLocked=locationIsLocked;
-        this.location=location;
+    public WorldMap(int rows, int cols) {
+        this.carte = new Location[rows][cols];
     }
 
-   
-    public int getLocation(int row, int column) {
+    public void addLocation(Location location, int row, int column) {
+        carte[row][column] = location;
+    }
+
+    public Location getLocation(int row, int column) {
         return carte[row][column];
     }
 
-
-    public boolean getLocationIsLocked(int row, int column) {
-        return locationIsLocked;
+    public boolean isInBounds(int x, int y) {
+        return x >= 0 && y >= 0 && x < carte.length && y < carte[0].length;
     }
-
-
-    public void addLocation(Location location, int row, int column) {
-        this.location = location;
-        carte[row][column] = 1; //1 indique que l'espace est utilisé
-    }
-
 
     public Location getPlayerLocation() {
-        return location;
+        return playerLocation;
     }
 
-    public void setPlayerLocation(int positionX, int positionY) {
-        if (location != null) {
-            location = new Location(location.getNom(), location.getDescr(), location.getEtat(), positionX, positionY);
+    public void setPlayerPosition(int x, int y) {
+        this.playerLocation = getLocation(x, y);
+    }
+
+    public String[][] getPrintableGrid() {
+        String[][] grid = new String[carte.length][carte[0].length];
+        for (int i = 0; i < carte.length; i++) {
+            for (int j = 0; j < carte[0].length; j++) {
+                grid[i][j] = (carte[i][j] == null) ? " " : "O";
+            }
         }
+        return grid;
     }
 }
-

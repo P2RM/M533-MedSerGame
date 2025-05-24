@@ -1,12 +1,14 @@
 package main;
  
+import java.util.Scanner;
+
 public class Game {
  
     private WorldMap map;
     private Player player;
     private CommandRegistry commandRegistry;
  
-    public Game() {
+    public Game(WorldMap map, Player player, CommandRegistry commandRegistry) {
         this.map = new WorldMap(5, 5);
         this.player = new Player("Player");
         this.commandRegistry = new CommandRegistry();
@@ -43,7 +45,7 @@ public class Game {
         commandRegistry.addCommand("help", new CommandHelp("help", "List all available commands"));
         commandRegistry.addCommand("look", new CommandLook("look", "Describe the current zone"));
         commandRegistry.addCommand("map", new CommandMap("map", "Display the world map"));
-        commandRegistry.addCommand("move", new CommandMove("move", "Move to a new zone"));
+        commandRegistry.addCommand("move", new CommandMove("move", "Move to a new location"));
     }
  
     public WorldMap getMap() {
@@ -59,7 +61,7 @@ public class Game {
     }
  
     public void run() {
-        public void run() {
+  
     Scanner scanner = new Scanner(System.in);
     System.out.println("Welcome to MedSer Game!");
     System.out.println("Type 'help' to see available commands.");
@@ -85,4 +87,3 @@ public class Game {
     scanner.close();
 }
     }
-}

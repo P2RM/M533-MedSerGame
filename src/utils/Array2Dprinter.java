@@ -3,7 +3,7 @@ package utils;
 /**
  * Utility class to print a 2D array in a grid formatted way.
  */
-public class Array2Dprinter {
+public class Array2DPrinter {
 
     private static int SPACING = 1;
 

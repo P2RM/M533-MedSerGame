@@ -1,20 +1,20 @@
 package main;
+import utils.IPrintable;
 
 public class Location implements IPrintable {
     private String nom;
     private String descr;
-    private boolean etat;
+    private boolean etat = false; // false = unlocked
     private int positionX;
     private int positionY;
 
-    public Location(String nom, String descr, boolean etat, int positionX, int positionY){
-        this.nom=nom;
-        this.descr=descr;
-        this.etat=etat;
-        this.positionX=positionX;
-        this.positionY=positionY;
+    public Location(String nom, String descr, int positionX, int positionY){
+        this.nom = nom;
+        this.descr = descr;
+        this.positionX = positionX;
+        this.positionY = positionY;
     }
-    
+
     public String getNom(){
         return this.nom;
     }
@@ -36,23 +36,28 @@ public class Location implements IPrintable {
     }
 
     public void lockLocation(){
-        etat=true;
+        etat = true;
     }
 
     public void unlockLocation(){
-        etat=false;
+        etat = false;
     }
 
     @Override
     public String getPrintableString() {
-        if (isLocked) return "X";        // verrouillé
-        else if (isVisited) return "O";  // déjà visité
-        else return " ";                // accessible
+        return etat ? "X" : "O";
     }
 
     @Override
     public boolean isGrayedOut() {
-        return !isVisited; //griser si jamais visité
+        return false;
     }
 
+    public boolean isLocked() {
+        return etat;
+    }
+
+    public String getDescription() {
+        return descr;
+    }
 }

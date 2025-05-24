@@ -30,7 +30,7 @@ public class CommandMove implements ICommand {
  
     @Override
     public String execute(Game game) {
-        List<String> validDirections = Arrays.asList("w", "a", "s", "d"); //transformer en ArrayList le String mddrrrrrr string
+        List<String> validDirections = Arrays.asList("w", "a", "s", "d"); //transformer en ArrayList le String
  
         if (direction == null || !validDirections.contains(direction)) {
             return "Unknown direction.";
