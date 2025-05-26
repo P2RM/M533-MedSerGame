@@ -1,5 +1,7 @@
 package main;
 
+import utils.Array2DPrinter;
+
 public class CommandMap implements ICommand {
 
     private String verb;
@@ -25,13 +27,13 @@ public class CommandMap implements ICommand {
         int posX = game.getPlayer().getPositionX();
         int posY = game.getPlayer().getPositionY();
 
-        /*System.out.println(
+        System.out.println(
             Array2DPrinter.print2DArray(
                 game.getMap().getPrintableGrid(),
                 posY,
                 posX
             )
         );
-        */return "";
+        return "";
     }
 }

@@ -28,13 +28,13 @@ public class WorldMap {
         this.playerLocation = getLocation(x, y);
     }
 
-    public String[][] getPrintableGrid() {
-        String[][] grid = new String[carte.length][carte[0].length];
+    public Location[][] getPrintableGrid() {
+        /*String[][] grid = new String[carte.length][carte[0].length];
         for (int i = 0; i < carte.length; i++) {
             for (int j = 0; j < carte[0].length; j++) {
                 grid[i][j] = (carte[i][j] == null) ? " " : "O";
             }
-        }
-        return grid;
+        }*/
+        return carte;
     }
 }
