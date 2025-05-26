@@ -61,29 +61,40 @@ public class Game {
     }
  
     public void run() {
-  
-    Scanner scanner = new Scanner(System.in);
-    System.out.println("Welcome to MedSer Game!");
-    System.out.println("Type 'help' to see available commands.");
- 
-    boolean running = true;
- 
-    while (running) {
-        System.out.print("> ");
-        String input = scanner.nextLine().trim().toLowerCase();
- 
-        if (input.equals("exit")) {
-            System.out.println("Goodbye!");
-            running = false;
-        } else if (commandRegistry.getCommands().containsKey(input)) {
-            ICommand command = commandRegistry.getCommands().get(input);
-            String result = command.execute(this);
-            System.out.println(result);
-        } else {
-            System.out.println("Unknown command. Type 'help' for a list.");
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Welcome to MedSer Game!");
+        System.out.println("Type 'help' to see available commands.");
+        boolean finished = false;
+     
+        while (!finished) {
+            System.out.print("> ");
+            String input = scanner.nextLine().trim().toLowerCase();
+     
+            if (input.equals("exit")) {
+                System.out.println("Goodbye!");
+                finished = true;
+            } else {
+                String[] parts = input.split(" ", 2); // "take clé" → ["take", "clé"]
+                String verb = parts[0];
+                String param = parts.length > 1 ? parts[1] : null;
+     
+                ICommand command = commandRegistry.getCommands().get(verb);
+     
+                if (command != null) {
+                    if (command instanceof CommandTake) {
+                        ((CommandTake) command).setTarget(param);
+                    } else if (command instanceof CommandInspect) {
+                        ((CommandInspect) command).setTarget(param);
+                    } else if (command instanceof CommandMove) {
+                        ((CommandMove) command).setDirection(param);
+                    }
+     
+                    String result = command.execute(this);
+                    System.out.println(result);
+                } else {
+                    System.out.println("Unknown command. Type 'help' for a list.");
+                }
+            }
         }
-    }
- 
-    scanner.close();
-}
-    }
+     
+        scanner.close();}}
