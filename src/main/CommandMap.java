@@ -22,14 +22,14 @@ public class CommandMap implements ICommand {
 
     @Override
     public String execute(Game game) {
-        int playerX = game.getPlayer().getPositionX();
-        int playerY = game.getPlayer().getPositionY();
+        int posX = game.getPlayer().getPositionX();
+        int posY = game.getPlayer().getPositionY();
 
         /*System.out.println(
             Array2DPrinter.print2DArray(
                 game.getMap().getPrintableGrid(),
-                playerY,
-                playerX
+                posY,
+                posX
             )
         );
         */return "";
