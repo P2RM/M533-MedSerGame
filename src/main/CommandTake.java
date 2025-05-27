@@ -1,12 +1,12 @@
 package main;
  
-public class CommandInspect implements ICommand {
+public class CommandTake implements ICommand {
  
     private String verb;
     private String description;
     private String objectName;
  
-    public CommandInspect(String verb, String description) {
+    public CommandTake(String verb, String description) {
         this.verb = verb;
         this.description = description;
     }
@@ -27,12 +27,14 @@ public class CommandInspect implements ICommand {
  
     @Override
     public String execute(Game game) {
-        Object object = game.getPlayer().getObjectByName(objectName);
+        Location current = game.getMap().getPlayerLocation();
+        Object object = current.removeObjectByName(objectName);
  
         if (object == null) {
-            return "You don't have this object in your inventory.";
+            return "There is no object with that name here.";
         } else {
-            return "Inspecting " + object.getName() + ":\n" + object.getDescription();
+            game.getPlayer().addToInventory(object);
+            return "You picked up: " + object.getName();
         }
     }
 
