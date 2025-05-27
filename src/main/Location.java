@@ -1,4 +1,6 @@
 package main;
+import java.util.ArrayList;
+import java.util.List;
 import utils.IPrintable;
 
 public class Location implements IPrintable {
@@ -13,6 +15,7 @@ public class Location implements IPrintable {
         this.descr = descr;
         this.positionX = positionX;
         this.positionY = positionY;
+        
     }
 
     public String getNom(){
@@ -60,4 +63,6 @@ public class Location implements IPrintable {
     public String getDescription() {
         return descr;
     }
+
+
 }
