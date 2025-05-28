@@ -1,9 +1,9 @@
 package main;
-
+ 
 public class Object {
     private String name;
     private String description;
-    private boolean usable; 
+    protected static boolean usable;
 
     public Object(String name, String description, boolean usable) {
         this.name = name;
