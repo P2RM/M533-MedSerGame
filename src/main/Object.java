@@ -1,9 +1,10 @@
 package main;
- 
+
 public class Object {
+
     private String name;
     private String description;
-    protected static boolean usable;
+    private boolean usable; // doit être une variable d'instance, pas static
 
     public Object(String name, String description, boolean usable) {
         this.name = name;
