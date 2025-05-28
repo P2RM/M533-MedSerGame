@@ -18,6 +18,7 @@ public class WorldMap {
         if (!isInBounds(x, y)) return null;
         return carte[y][x];
     }
+    h
 
     public void addLocation(Location location, int y, int x) {
         if (isInBounds(x, y)) {
