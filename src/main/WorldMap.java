@@ -1,40 +1,38 @@
 package main;
 
 public class WorldMap {
+
     private Location[][] carte;
-    private Location playerLocation;
+    private Player player;
 
-    public WorldMap(int rows, int cols) {
+    public WorldMap(int rows, int cols, Player player) {
         this.carte = new Location[rows][cols];
-    }
-
-    public void addLocation(Location location, int row, int column) {
-        carte[row][column] = location;
-    }
-
-    public Location getLocation(int row, int column) {
-        return carte[row][column];
+        this.player = player;
     }
 
     public boolean isInBounds(int x, int y) {
-        return x >= 0 && y >= 0 && x < carte.length && y < carte[0].length;
+        return y >= 0 && x >= 0 && y < carte.length && x < carte[0].length;
+    }
+
+    public Location getLocation(int x, int y) {
+        if (!isInBounds(x, y)) return null;
+        return carte[y][x];
+    }
+
+    public void addLocation(Location location, int y, int x) {
+        if (isInBounds(x, y)) {
+            carte[y][x] = location;
+        }
     }
 
     public Location getPlayerLocation() {
-        return playerLocation;
+        return getLocation(player.getPositionX(), player.getPositionY());
     }
 
     public void setPlayerPosition(int x, int y) {
-        this.playerLocation = getLocation(x, y);
-    }
-
-    public Location[][] getPrintableGrid() {
-        /*String[][] grid = new String[carte.length][carte[0].length];
-        for (int i = 0; i < carte.length; i++) {
-            for (int j = 0; j < carte[0].length; j++) {
-                grid[i][j] = (carte[i][j] == null) ? " " : "O";
-            }
-        }*/
-        return carte;
+        if (isInBounds(x, y)) {
+            player.setPositionX(x);
+            player.setPositionY(y);
+        }
     }
 }
