@@ -33,7 +33,8 @@ public class CommandHelp implements ICommand {
  
     for (String verb : verbs) {
         ICommand command = game.getCommandRegistry().getCommands().get(verb);
-        result += "- " + verb + " : " + command.getDescription();
+        result += "- " + verb + " : " + command.getDescription() + "\n";
+
     }
  
     return result;

@@ -4,9 +4,8 @@ public class Cle extends Object {
     private String unlockTargetName;
  
 
-    public Cle(String name, String unlockTargetName) {
-        super(name, unlockTargetName, usable);
-        super(name, unlockTargetName, true);
+    public Cle(String name, String description, boolean usable, String unlockTargetName) {
+        super(name, description, usable);
         this.unlockTargetName = unlockTargetName;
     }
 

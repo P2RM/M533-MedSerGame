@@ -25,19 +25,21 @@ public class CommandInspect implements ICommand {
         return description;
     }
  
-    @Override
-    public String execute(Game game) {
-        Object object = game.getPlayer().getObjectByName(objectName);
- 
-        if (object == null) {
-            return "You don't have this object in your inventory.";
-        } else {
-            return "Inspecting " + object.getName() + ":\n" + object.getDescription();
+   @Override
+public String execute(Game game) {
+    Object object = null;
+    for (Object obj : game.getPlayer().getInventory()) {
+        if (obj.getName().equalsIgnoreCase(objectName)) {
+            object = obj;
+            break;
         }
     }
 
-    public void setTarget(String param) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setTarget'");
+    if (object == null) {
+        return "You don't have this object in your inventory.";
+    } else {
+        return "Inspecting " + object.getName() + ":\n" + object.getDescription();
     }
+}
+
 }

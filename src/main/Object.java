@@ -23,4 +23,7 @@ public class Object {
     public boolean isUsable() {
         return usable;
     }
+    public void setName(String name){
+        this.name =name;
+    }
 }
