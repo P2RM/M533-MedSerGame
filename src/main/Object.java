@@ -1,10 +1,9 @@
 package main;
 
 public class Object {
-
     private String name;
     private String description;
-    private boolean usable; // doit être une variable d'instance, pas static
+    private boolean usable;
 
     public Object(String name, String description, boolean usable) {
         this.name = name;
@@ -12,18 +11,7 @@ public class Object {
         this.usable = usable;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public boolean isUsable() {
-        return usable;
-    }
-    public void setName(String name){
-        this.name =name;
-    }
+    public String getName() { return name; }
+    public String getDescription() { return description; }
+    public boolean isUsable() { return usable; }
 }

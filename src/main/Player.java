@@ -1,52 +1,34 @@
 package main;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class Player {
     private String name;
-    private int positionX;
-    private int positionY;
-    private List<Object> inventaire = new ArrayList<>();
+    private int posX;
+    private int posY;
+    private List<Object> inventory;
 
     public Player(String name) {
         this.name = name;
-        this.positionX = 0;
-        this.positionY = 0;
+        this.posX = 0;
+        this.posY = 0;
+        this.inventory = new ArrayList<>();
     }
 
-    public int getPositionX() {
-        return positionX;
+    
+    public int getPositionX() { return posX; }
+    public int getPositionY() { return posY; }
+    public void setPosition(int x, int y) { this.posX = x; this.posY = y; }
+    public List<Object> getInventory() { return inventory; }
+
+    public void addItem(Object item) { inventory.add(item); }
+    public boolean hasItem(String itemName) {
+        for (Object obj : inventory)
+            if (obj.getName().equalsIgnoreCase(itemName)) return true;
+        return false;
     }
-
-    public int getPositionY() {
-        return positionY;
+    public Object getItemByName(String name) {
+        for (Object obj : inventory)
+            if (obj.getName().equalsIgnoreCase(name)) return obj;
+        return null;
     }
-
-    public List<Object> getInventory() {
-    return inventaire;
-}
-
-
-    public void setPositionX(int positionX) {
-        this.positionX = positionX;
-    }
-
-    public void setPositionY(int positionY) {
-        this.positionY = positionY;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void addToInventory(Object object) {
-    for (Object obj : inventaire) {
-        if (obj.getName().equalsIgnoreCase(object.getName())) {
-            return; // pour Pierre de Romain : c'est en gros comme si l'objet existe déjà
-        }
-    }
-    inventaire.add(object);
-}
-
 }

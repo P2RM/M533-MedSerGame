@@ -1,5 +1,4 @@
 package main;
-
 import java.util.Scanner;
 
 public class Game {
@@ -15,8 +14,8 @@ public class Game {
         this.commandRegistry = commandRegistry;
         this.finished = false;
 
-        initializeMap();       // Ajout des zones codées en dur
-        initializeCommands();  // Ajout des commandes disponibles
+        initializeMap();
+        initializeCommands();
         map.setPlayerPosition(0, 0);
     }
 
@@ -32,6 +31,13 @@ public class Game {
         Location zone8 = new Location("Bibliothèque", "Des livres anciens et poussiéreux.", 2, 2);
         Location zone9 = new Location("Sortie du donjon", "Une lumière intense vous guide vers la sortie.", 3, 1);
 
+        // Objets
+        zone0.addItem(new Cle("clé rouillée", "Une vieille clé rouillée.", false, "Salle secrète"));
+        zone2.addItem(new Object("potion étrange", "Une fiole mystérieuse.", false));
+        zone3.addItem(new Object("épée émoussée", "Une épée peu tranchante.", false));
+
+        zone4.lock("clé rouillée");
+
         map.addLocation(zone0, 0, 0);
         map.addLocation(zone1, 0, 1);
         map.addLocation(zone2, 0, 2);
@@ -45,18 +51,18 @@ public class Game {
     }
 
     private void initializeCommands() {
-        commandRegistry.addCommand("help", new CommandHelp("help", "List all available commands"));
-        commandRegistry.addCommand("look", new CommandLook("look", "Describe the current zone"));
-        commandRegistry.addCommand("map", new CommandMap("map", "Display the world map"));
-        commandRegistry.addCommand("move", new CommandMove("move", "Move to a new location"));
-        commandRegistry.addCommand("inspect", new CommandInspect("inspect", "Inspect an object in your inventory"));
-        commandRegistry.addCommand("take", new CommandTake("take", "Pick up an object"));
+        commandRegistry.addCommand("help", new CommandHelp("help", "Affiche la liste des commandes disponibles"));
+        commandRegistry.addCommand("look", new CommandLook("look", "Décrit la zone actuelle"));
+        commandRegistry.addCommand("map", new CommandMap("map", "Affiche la carte"));
+        commandRegistry.addCommand("move", new CommandMove("move", "Se déplacer dans la carte (w/a/s/d)"));
+        commandRegistry.addCommand("take", new CommandTake("take", "Ramasser un objet présent"));
+        commandRegistry.addCommand("inspect", new CommandInspect("inspect", "Inspecter un objet dans l’inventaire"));
     }
 
     public void run() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Welcome to the MedSer Game!");
-        System.out.println("Type 'help' to see available commands.\n");
+        System.out.println("Bienvenue dans le MedSer Game !");
+        System.out.println("Tapez 'help' pour afficher les commandes disponibles.\n");
 
         map.setPlayerPosition(player.getPositionX(), player.getPositionY());
         printMap();
@@ -66,39 +72,35 @@ public class Game {
             String input = scanner.nextLine().trim().toLowerCase();
 
             if (input.equals("exit")) {
-                System.out.println("Goodbye!");
-                finished = true;
-            } else {
-                String[] parts = input.split(" ", 2);
-                String verb = parts[0];
-                String param = parts.length > 1 ? parts[1] : null;
+                System.out.println("Merci d’avoir joué !");
+                break;
+            }
+            String[] parts = input.split(" ", 2);
+            String commandKey = parts[0];
+            String argument = parts.length > 1 ? parts[1] : null;
 
-                ICommand command = commandRegistry.getCommands().get(verb);
-
-                if (command != null) {
-                    if (command instanceof CommandMove && param != null) {
-                        ((CommandMove) command).setDirection(param);
-                    } else if (command instanceof CommandInspect && param != null) {
-                        ((CommandInspect) command).setObjectName(param);
-                    } else if (command instanceof CommandTake && param != null) {
-                        ((CommandTake) command).setObjectName(param);
-                    }
-
-                    String result = command.execute(this);
-                    System.out.println(result);
-                    printMap();
-                } else {
-                    System.out.println("Unknown command. Type 'help' for a list.");
+            ICommand command = commandRegistry.getCommand(commandKey);
+            if (command != null) {
+                if (command instanceof CommandMove && argument != null) {
+                    ((CommandMove) command).setDirection(argument);
+                } else if (command instanceof CommandInspect && argument != null) {
+                    ((CommandInspect) command).setObjectName(argument);
+                } else if (command instanceof CommandTake && argument != null) {
+                    ((CommandTake) command).setObjectName(argument);
                 }
+
+                String result = command.execute(this);
+                System.out.println(result);
+                printMap();
+            } else {
+                System.out.println("Commande inconnue. Tapez 'help' pour les commandes disponibles.");
             }
         }
-
         scanner.close();
     }
 
     public void printMap() {
-        System.out.println("\n--- World Map ---");
-
+        System.out.println("\n--- Carte du Monde ---");
         Location[][] grid = map.getPrintableGrid();
         for (int y = 0; y < grid.length; y++) {
             for (int x = 0; x < grid[0].length; x++) {
@@ -115,29 +117,16 @@ public class Game {
             }
             System.out.println();
         }
-
         Location current = map.getPlayerLocation();
         if (current != null) {
-            System.out.println("You are at position (" + player.getPositionX() + ", " + player.getPositionY() + ") - " + current.getNom());
+            System.out.println("Vous êtes en (" + player.getPositionX() + ", " + player.getPositionY() + ") - " + current.getNom());
         } else {
-            System.out.println("You are at position (" + player.getPositionX() + ", " + player.getPositionY() + ")");
+            System.out.println("Position actuelle : (" + player.getPositionX() + ", " + player.getPositionY() + ")");
         }
     }
 
-    // Getters et Setters
-    public WorldMap getMap() {
-        return map;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public CommandRegistry getCommandRegistry() {
-        return commandRegistry;
-    }
-
-    public void setFinished(boolean finished) {
-        this.finished = finished;
-    }
+    public WorldMap getMap() { return map; }
+    public Player getPlayer() { return player; }
+    public CommandRegistry getCommandRegistry() { return commandRegistry; }
+    public void setFinished(boolean finished) { this.finished = finished; }
 }

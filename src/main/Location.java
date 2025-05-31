@@ -1,88 +1,59 @@
 package main;
 
-import java.util.ArrayList;
-import java.util.List;
-import utils.IPrintable;
+import java.util.*;
+import utils.IPrintable; // <-- Important !
 
 public class Location implements IPrintable {
-
     private String nom;
-    private String descr;
+    private String description;
+    private int x, y;
+    private List<Object> items;
     private boolean locked;
-    private int positionX;
-    private int positionY;
-    private List<Object> objects;
+    private String requiredKey;
 
-    public Location(String nom, String descr, int positionX, int positionY) {
+    public Location(String nom, String description, int x, int y) {
         this.nom = nom;
-        this.descr = descr;
-        this.positionX = positionX;
-        this.positionY = positionY;
-        this.locked = false; // Par défaut déverrouillé
-        this.objects = new ArrayList<>();
-    }
-
-    public String getNom() {
-        return nom;
-    }
-
-    public String getDescr() {
-        return descr;
-    }
-
-    public int getPositionX() {
-        return positionX;
-    }
-
-    public int getPositionY() {
-        return positionY;
-    }
-
-    public boolean isLocked() {
-        return locked;
-    }
-
-    public void setLocked(boolean locked) {
-        this.locked = locked;
-    }
-
-    public void lockLocation() {
-        this.locked = true;
-    }
-
-    public void unlockLocation() {
+        this.description = description;
+        this.x = x;
+        this.y = y;
+        this.items = new ArrayList<>();
         this.locked = false;
     }
 
-    public void addObject(Object obj) {
-        this.objects.add(obj);
-    }
+    public void addItem(Object item) { items.add(item); }
 
-    public Object removeObjectByName(String name) {
-        for (Object obj : objects) {
-            if (obj.getName().equalsIgnoreCase(name)) {
-                objects.remove(obj);
-                return obj;
-            }
+    public Object getItemByName(String name) {
+        for (Object obj : items) {
+            if (obj.getName().equalsIgnoreCase(name)) return obj;
         }
         return null;
     }
 
-    public List<Object> getObjects() {
-        return objects;
-    }
+    public boolean removeItem(Object item) { return items.remove(item); }
 
-    public String getDescription() {
-        return descr;
-    }
-
-    @Override
-    public String getPrintableString() {
-        return locked ? "X" : "O";
-    }
-
-    @Override
-    public boolean isGrayedOut() {
+    public boolean removeItemByName(String name) {
+        Object obj = getItemByName(name);
+        if (obj != null) { items.remove(obj); return true; }
         return false;
     }
+
+    public List<Object> getItems() { return items; }
+
+    public void lock(String key) { this.locked = true; this.requiredKey = key; }
+    public boolean isLocked() { return locked; }
+    public boolean canUnlock(String key) {
+        return locked && requiredKey != null && requiredKey.equalsIgnoreCase(key);
+    }
+    public void unlock() { this.locked = false; this.requiredKey = null; }
+
+    public String getNom() { return nom; }
+    public String getDescription() { return description; }
+    public int getX() { return x; }
+    public int getY() { return y; }
+
+    @Override
+    public String getPrintableString() { return locked ? "X" : "O"; }
+
+    @Override
+    public boolean isGrayedOut() { return false; }
 }

@@ -1,42 +1,36 @@
 package main;
 
 public class WorldMap {
-
-    private Location[][] carte;
+    private Location[][] grid;
     private Player player;
 
-    public WorldMap(int rows, int cols, Player player) {
-        this.carte = new Location[rows][cols];
+    public WorldMap(int width, int height, Player player) {
+        grid = new Location[height][width];
         this.player = player;
     }
 
+    public void addLocation(Location loc, int x, int y) {
+        grid[y][x] = loc;
+    }
+
     public boolean isInBounds(int x, int y) {
-        return y >= 0 && x >= 0 && y < carte.length && x < carte[0].length;
+        return (y >= 0 && y < grid.length && x >= 0 && x < grid[0].length);
     }
 
     public Location getLocation(int x, int y) {
         if (!isInBounds(x, y)) return null;
-        return carte[y][x];
+        return grid[y][x];
     }
 
-    public void addLocation(Location location, int y, int x) {
-        if (isInBounds(x, y)) {
-            carte[y][x] = location;
-        }
+    public void setPlayerPosition(int x, int y) {
+        player.setPosition(x, y);
     }
 
     public Location getPlayerLocation() {
         return getLocation(player.getPositionX(), player.getPositionY());
     }
 
-    public void setPlayerPosition(int x, int y) {
-        if (isInBounds(x, y)) {
-            player.setPositionX(x);
-            player.setPositionY(y);
-        }
-    }
-
     public Location[][] getPrintableGrid() {
-        return carte;
+        return grid;
     }
 }
