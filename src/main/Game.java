@@ -7,13 +7,16 @@ public class Game {
     private WorldMap map;
     private Player player;
     private CommandRegistry commandRegistry;
+    private boolean finished;
 
     public Game(WorldMap map, Player player, CommandRegistry commandRegistry) {
         this.map = map;
         this.player = player;
         this.commandRegistry = commandRegistry;
-        initializeMap();
-        initializeCommands();
+        this.finished = false;
+
+        initializeMap();       // Ajout des zones codées en dur
+        initializeCommands();  // Ajout des commandes disponibles
         map.setPlayerPosition(0, 0);
     }
 
@@ -50,27 +53,16 @@ public class Game {
         commandRegistry.addCommand("take", new CommandTake("take", "Pick up an object"));
     }
 
-    public WorldMap getMap() {
-        return map;
-    }
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public CommandRegistry getCommandRegistry() {
-        return commandRegistry;
-    }
-
     public void run() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Welcome to MedSer Game!");
-        System.out.println("Type 'help' to see available commands.");
+        System.out.println("Welcome to the MedSer Game!");
+        System.out.println("Type 'help' to see available commands.\n");
 
-        boolean finished = false;
+        map.setPlayerPosition(player.getPositionX(), player.getPositionY());
+        printMap();
 
         while (!finished) {
-            System.out.print("> ");
+            System.out.print("\n> ");
             String input = scanner.nextLine().trim().toLowerCase();
 
             if (input.equals("exit")) {
@@ -94,6 +86,7 @@ public class Game {
 
                     String result = command.execute(this);
                     System.out.println(result);
+                    printMap();
                 } else {
                     System.out.println("Unknown command. Type 'help' for a list.");
                 }
@@ -101,5 +94,50 @@ public class Game {
         }
 
         scanner.close();
+    }
+
+    public void printMap() {
+        System.out.println("\n--- World Map ---");
+
+        Location[][] grid = map.getPrintableGrid();
+        for (int y = 0; y < grid.length; y++) {
+            for (int x = 0; x < grid[0].length; x++) {
+                if (x == player.getPositionX() && y == player.getPositionY()) {
+                    System.out.print(" R ");
+                } else {
+                    Location loc = grid[y][x];
+                    if (loc == null) {
+                        System.out.print(" . ");
+                    } else {
+                        System.out.print(" " + loc.getPrintableString() + " ");
+                    }
+                }
+            }
+            System.out.println();
+        }
+
+        Location current = map.getPlayerLocation();
+        if (current != null) {
+            System.out.println("You are at position (" + player.getPositionX() + ", " + player.getPositionY() + ") - " + current.getNom());
+        } else {
+            System.out.println("You are at position (" + player.getPositionX() + ", " + player.getPositionY() + ")");
+        }
+    }
+
+    // Getters et Setters
+    public WorldMap getMap() {
+        return map;
+    }
+
+    public Player getPlayer() {
+        return player;
+    }
+
+    public CommandRegistry getCommandRegistry() {
+        return commandRegistry;
+    }
+
+    public void setFinished(boolean finished) {
+        this.finished = finished;
     }
 }
