@@ -42,7 +42,7 @@ public class CommandTake implements ICommand {
         currentLocation.removeItem(obj);
         game.getPlayer().addItem(obj);
 
-        // Déverrouille automatiquement les lieux si la clé correspond
+        // pour Pierre : on déverrouille automatiquement les lieux si la clé est la bonne
         for (Location[] row : game.getMap().getPrintableGrid()) {
             for (Location loc : row) {
                 if (loc != null && loc.isLocked() && loc.canUnlock(obj.getName())) {

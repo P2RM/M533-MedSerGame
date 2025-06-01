@@ -29,7 +29,7 @@ public class CommandInspect implements ICommand {
     @Override
     public String execute(Game game) {
         if (objectName == null || objectName.isEmpty()) {
-            // Affiche tout l’inventaire
+            // pour Romain de Raul : ça sa affiche l’inventaire
             if (game.getPlayer().getInventory().isEmpty()) {
                 return "Votre inventaire est vide.";
             }
