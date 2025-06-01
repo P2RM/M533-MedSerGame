@@ -31,7 +31,7 @@ public class Game {
         Location zone8 = new Location("Bibliothèque", "Des livres anciens et poussiéreux.", 2, 2);
         Location zone9 = new Location("Sortie du donjon", "Une lumière intense vous guide vers la sortie.", 3, 1);
 
-        // Objets
+        // Liste des objets, il n'y a que la clé qui déverouille une zone
         zone0.addItem(new Cle("clé rouillée", "Une vieille clé rouillée.", false, "Salle secrète"));
         zone2.addItem(new Object("potion étrange", "Une fiole mystérieuse.", false));
         zone3.addItem(new Object("épée émoussée", "Une épée peu tranchante.", false));

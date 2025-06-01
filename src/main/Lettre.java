@@ -10,6 +10,6 @@ public class Lettre extends Object {
 
     @Override
     public String getDescription() {
-        return "A letter that reads: " + text;
+        return "Une lettre où il est écrit : " + text;
     }
 }

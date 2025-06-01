@@ -1,7 +1,7 @@
 package main;
 
 import java.util.*;
-import utils.IPrintable; // <-- Important !
+import utils.IPrintable;
 
 public class Location implements IPrintable {
     private String nom;
@@ -39,6 +39,7 @@ public class Location implements IPrintable {
 
     public List<Object> getItems() { return items; }
 
+    // Gestion de verouillage et de déverouillage de zone
     public void lock(String key) { this.locked = true; this.requiredKey = key; }
     public boolean isLocked() { return locked; }
     public boolean canUnlock(String key) {

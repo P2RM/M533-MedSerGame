@@ -16,6 +16,8 @@ public class CommandHelp implements ICommand {
     @Override
     public String getDescription() { return description; }
 
+
+    //Méthode qui retourne la chaine de caracteres complete de toutes les commandes disponibles 
     @Override
     public String execute(Game game) {
         StringBuilder result = new StringBuilder("Commandes disponibles :\n");

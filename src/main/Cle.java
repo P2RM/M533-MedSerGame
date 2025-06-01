@@ -16,7 +16,7 @@ public class Cle extends Object {
 
     @Override
     public String getDescription() {
-        return "A key labeled \"" + unlockTargetName + "\".";
+        return "Une clé nommée \"" + unlockTargetName + "\".";
     }
 }
 

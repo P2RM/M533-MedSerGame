@@ -3,7 +3,7 @@ package main;
 public class Main {
     public static void main(String[] args) {
         Player player = new Player("Romain"); // Constructeur OK
-        WorldMap map = new WorldMap(4, 4, player);
+        WorldMap map = new WorldMap(5, 5, player);
         CommandRegistry commandRegistry = new CommandRegistry();
 
         // Enregistrement des commandes (tu peux ajouter d'autres Command plus tard)
