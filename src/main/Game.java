@@ -31,12 +31,18 @@ public class Game {
         Location zone8 = new Location("Bibliothèque", "Des livres anciens et poussiéreux.", 2, 2);
         Location zone9 = new Location("Sortie du donjon", "Une lumière intense vous guide vers la sortie.", 3, 1);
 
-        // Liste des objets, il n'y a que la clé qui déverouille une zone
         zone0.addItem(new Cle("clé rouillée", "Une vieille clé rouillée.", false, "Salle secrète"));
         zone2.addItem(new Object("potion étrange", "Une fiole mystérieuse.", false));
         zone3.addItem(new Object("épée émoussée", "Une épée peu tranchante.", false));
+        zone7.addItem(new Cle("clé d'or et de platine", "Une clé prestigieuse.", false, "Armurerie"));
 
+        // Verrouillage de salles
         zone4.lock("clé rouillée");
+        zone7.lock("clé d'or et de platine");
+        zone1.lock("clé énigme");
+
+        // Indiquer que zone1 contient une énigme
+        zone1.setHasEnigme(true);
 
         map.addLocation(zone0, 0, 0);
         map.addLocation(zone1, 0, 1);
@@ -57,11 +63,13 @@ public class Game {
         commandRegistry.addCommand("move", new CommandMove("move", "Se déplacer dans la carte (w/a/s/d)"));
         commandRegistry.addCommand("take", new CommandTake("take", "Ramasser un objet présent"));
         commandRegistry.addCommand("inspect", new CommandInspect("inspect", "Inspecter un objet dans l’inventaire"));
+        commandRegistry.addCommand("guess", new CommandGuess("guess", "Résoudre une énigme pour obtenir une clé"));
+        commandRegistry.addCommand("use", new CommandUse("use", "Permet d'utiliser une clé pour déverrouiller une zone"));
     }
 
     public void run() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Bienvenue dans le MedSer Game !");
+        System.out.println("Bienvenue dans le MedSerGame !");
         System.out.println("Tapez 'help' pour afficher les commandes disponibles.\n");
 
         map.setPlayerPosition(player.getPositionX(), player.getPositionY());
@@ -87,6 +95,10 @@ public class Game {
                     ((CommandInspect) command).setObjectName(argument);
                 } else if (command instanceof CommandTake && argument != null) {
                     ((CommandTake) command).setObjectName(argument);
+                } else if (command instanceof CommandUse && argument != null) {
+                    ((CommandUse) command).setObjectName(argument);
+                } else if (command instanceof CommandGuess && argument != null) {
+                    ((CommandGuess) command).setAnswer(argument);
                 }
 
                 String result = command.execute(this);

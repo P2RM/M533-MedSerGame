@@ -1,5 +1,4 @@
 package main;
-
 import java.util.*;
 import utils.IPrintable;
 
@@ -10,6 +9,8 @@ public class Location implements IPrintable {
     private List<Object> items;
     private boolean locked;
     private String requiredKey;
+    // Nouvelle propriété
+    private boolean hasEnigme = false;
 
     public Location(String nom, String description, int x, int y) {
         this.nom = nom;
@@ -21,40 +22,36 @@ public class Location implements IPrintable {
     }
 
     public void addItem(Object item) { items.add(item); }
-
     public Object getItemByName(String name) {
         for (Object obj : items) {
             if (obj.getName().equalsIgnoreCase(name)) return obj;
         }
         return null;
     }
-
     public boolean removeItem(Object item) { return items.remove(item); }
-
     public boolean removeItemByName(String name) {
         Object obj = getItemByName(name);
         if (obj != null) { items.remove(obj); return true; }
         return false;
     }
-
     public List<Object> getItems() { return items; }
-
-    // Gestion de verouillage et de déverouillage de zone
     public void lock(String key) { this.locked = true; this.requiredKey = key; }
     public boolean isLocked() { return locked; }
     public boolean canUnlock(String key) {
         return locked && requiredKey != null && requiredKey.equalsIgnoreCase(key);
     }
     public void unlock() { this.locked = false; this.requiredKey = null; }
-
     public String getNom() { return nom; }
     public String getDescription() { return description; }
     public int getX() { return x; }
     public int getY() { return y; }
 
+    // Gestion de l'énigme
+    public boolean hasEnigme() { return hasEnigme; }
+    public void setHasEnigme(boolean value) { this.hasEnigme = value; }
+
     @Override
     public String getPrintableString() { return locked ? "X" : "O"; }
-
     @Override
     public boolean isGrayedOut() { return false; }
 }

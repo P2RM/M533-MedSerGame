@@ -34,6 +34,10 @@ public class CommandLook implements ICommand {
                     sb.append(obj.getName()).append(" ");
                 }
             }
+            // Affiche l'indication s'il y a une énigme
+            if (currentLocation.hasEnigme()) {
+                sb.append("\n>> Il y a une énigme ici ! Essayez la commande 'guess ...'");
+            }
             return sb.toString();
         } else {
             return "Vous n'êtes dans aucune salle valide.";
