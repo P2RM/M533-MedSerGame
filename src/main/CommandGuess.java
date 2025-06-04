@@ -4,7 +4,7 @@ public class CommandGuess implements ICommand {
 
     private String verb;
     private String description;
-    private String answer; // La réponse proposée par le joueur
+    private String answer;
 
     public CommandGuess(String verb, String description) {
         this.verb = verb;
@@ -17,42 +17,46 @@ public class CommandGuess implements ICommand {
     }
 
     @Override
-    public String getVerb() { return verb; }
+    public String getVerb() {
+        return verb;
+    }
 
     @Override
-    public String getDescription() { return description; }
+    public String getDescription() {
+        return description;
+    }
 
     @Override
     public String execute(Game game) {
-        // L'énigme proposée
-        String enonce = 
-            "Voici un extrait de code Java :\n" +
-            "int x = 5;\n" +
-            "int y = 3;\n" +
-            "System.out.println(x + y * 2);\n\n" +
-            "Quelle sera la valeur affichée à l'écran ?\n" +
-            "(Utilise la commande 'guess <réponse>')";
+        Location location = game.getMap().getPlayerLocation();
 
-        String bonneReponse = "11"; // 5 + 3*2 = 11
-
-        // Si aucune réponse donnée, on affiche l'énigme
-        if (answer == null) {
-            return enonce;
+        // Aucune énigme ici
+        if (location == null || !location.hasEnigme()) {
+            answer = null; // reset
+            return "Il n'y a pas d'énigme ici.";
         }
 
-        // Si c'est la bonne réponse
-        if (answer.trim().equals(bonneReponse)) {
-            // Vérifier si la clé a déjà été obtenue
-            if (!game.getPlayer().hasItem("clé énigme")) {
-                game.getPlayer().addItem(
-                    new Cle("clé énigme", "Une clé offerte pour avoir résolu l'énigme du code.", false, "Salle finale")
-                );
-                return "Bravo ! Tu as résolu l'énigme. Tu reçois une 'clé énigme' dans ton inventaire.";
-            } else {
-                return "Tu as déjà reçu la clé énigme !";
+        Enigme enigme = location.getEnigme();
+
+        // Si aucune réponse n’est fournie
+        if (answer == null || answer.isEmpty()) {
+            return "Énigme :\n" + enigme.getQuestion();
+        }
+
+        // Vérifie la réponse
+        if (enigme.isCorrect(answer)) {
+            Object reward = enigme.getReward();
+
+            if (reward != null && !game.getPlayer().hasItem(reward.getName())) {
+                game.getPlayer().addItem(reward);
             }
+
+            location.setEnigme(null); // l’énigme est résolue
+            answer = null; // reset pour les prochaines énigmes
+            return "Bonne réponse ! Vous obtenez : " + reward.getName();
         } else {
-            return "Mauvaise réponse… Essaie encore.";
+            answer = null; // reset pour réessayer proprement
+            return "Mauvaise réponse. Réessayez.";
         }
     }
 }

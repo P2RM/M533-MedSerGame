@@ -1,4 +1,5 @@
 package main;
+
 import java.util.Scanner;
 
 public class Game {
@@ -21,39 +22,68 @@ public class Game {
 
     private void initializeMap() {
         Location zone0 = new Location("Entrée du donjon", "Une porte massive bloque le passage.", 0, 0);
-        Location zone1 = new Location("Salle des énigmes", "Une pièce remplie de parchemins.", 0, 1);
+        Location zone1 = new Location("Salle des parchemins", "Des textes anciens murmurent des secrets.", 0, 1);
         Location zone2 = new Location("Caverne humide", "Des gouttes d'eau tombent du plafond.", 0, 2);
-        Location zone3 = new Location("Chambre du gardien", "Un monstre garde un coffre ici.", 1, 0);
-        Location zone4 = new Location("Salle secrète", "Une salle bien cachée derrière un mur.", 1, 1);
-        Location zone5 = new Location("Corridor sombre", "Il fait noir, vous entendez des bruits...", 1, 2);
-        Location zone6 = new Location("Laboratoire", "Des fioles bouillonnent sur les tables.", 2, 0);
-        Location zone7 = new Location("Armurerie", "Des armes sont accrochées au mur.", 2, 1);
-        Location zone8 = new Location("Bibliothèque", "Des livres anciens et poussiéreux.", 2, 2);
-        Location zone9 = new Location("Sortie du donjon", "Une lumière intense vous guide vers la sortie.", 3, 1);
-
-        zone0.addItem(new Cle("clé rouillée", "Une vieille clé rouillée.", false, "Salle secrète"));
-        zone2.addItem(new Object("potion étrange", "Une fiole mystérieuse.", false));
+        Location zone3 = new Location("Chambre du gardien", "Un monstre garde un coffre ici.", 0, 3);
+        Location zone4 = new Location("Salle verrouillée", "Une salle fermée par un mécanisme secret.", 1, 0);
+        Location zone5 = new Location("Corridor sombre", "Il fait noir, vous entendez des bruits...", 1, 1);
+        Location zone6 = new Location("Laboratoire", "Des fioles bouillonnent sur les tables.", 1, 2);
+        Location zone7 = new Location("Armurerie", "Des armes sont accrochées au mur.", 1, 3);
+        Location zone8 = new Location("Bibliothèque", "Des livres anciens et poussiéreux.", 2, 0);
+        Location zone9 = new Location("Sortie du donjon", "Une lumière intense vous guide vers la sortie.", 2, 1);
+        Location zone10 = new Location("Forge abandonnée", "Des braises éteintes témoignent d'une activité passée.", 2, 2);
+        Location zone11 = new Location("Sanctuaire oublié", "Un lieu sacré recouvert de mousse.", 2, 3);
+        Location zone12 = new Location("Galerie effondrée", "Le sol est instable, attention où vous marchez.", 3, 0);
+        Location zone13 = new Location("Chambre scellée", "Une pièce cachée derrière des symboles.", 3, 1);
+        Location zone14 = new Location("Pont suspendu", "Un vieux pont qui grince sous vos pas.", 3, 2);
+        Location zone15 = new Location("Observatoire", "Un télescope pointé vers les étoiles.", 3, 3);
+    
+        // Objets libres
+        zone0.addItem(new Cle("clé rouillée", "Une vieille clé rouillée.", false, "Salle verrouillée"));
         zone3.addItem(new Object("épée émoussée", "Une épée peu tranchante.", false));
-        zone7.addItem(new Cle("clé d'or et de platine", "Une clé prestigieuse.", false, "Armurerie"));
-
-        // Verrouillage de salles
-        zone4.lock("clé rouillée");
-        zone7.lock("clé d'or et de platine");
-        zone1.lock("clé énigme");
-
-        // Indiquer que zone1 contient une énigme
-        zone1.setHasEnigme(true);
-
+        zone7.addItem(new Cle("clé d'or et de platine", "Une clé prestigieuse.", false, "Sortie du donjon"));
+    
+        // Zones verrouillées
+        zone4.lock("clé du savoir");
+        zone5.lock("clé du calcul");
+        zone9.lock("clé du destin");
+    
+        // Énigmes dans zones accessibles
+        zone1.setEnigme(new Enigme(
+            "Quel mot de 5 lettres devient plus court quand on y ajoute deux lettres ?",
+            "court",
+            new Cle("clé du savoir", "Clé gagnée pour avoir bien interprété un jeu de mots.", false, "Salle verrouillée")
+        ));
+    
+        zone2.setEnigme(new Enigme(
+            "Résous : (8 / 2) * (2 + 2)",
+            "16",
+            new Cle("clé du calcul", "Clé donnée pour une résolution mathématique correcte.", false, "Corridor sombre")
+        ));
+    
+        zone6.setEnigme(new Enigme(
+            "Je suis toujours devant toi mais tu ne peux jamais m’atteindre. Qui suis-je ?",
+            "l'avenir",
+            new Cle("clé du destin", "Clé mystérieuse liée au futur.", false, "Sortie du donjon")
+        ));
+    
+        // Ajout des zones à la carte
         map.addLocation(zone0, 0, 0);
         map.addLocation(zone1, 0, 1);
         map.addLocation(zone2, 0, 2);
-        map.addLocation(zone3, 1, 0);
-        map.addLocation(zone4, 1, 1);
-        map.addLocation(zone5, 1, 2);
-        map.addLocation(zone6, 2, 0);
-        map.addLocation(zone7, 2, 1);
-        map.addLocation(zone8, 2, 2);
-        map.addLocation(zone9, 3, 1);
+        map.addLocation(zone3, 0, 3);
+        map.addLocation(zone4, 1, 0);
+        map.addLocation(zone5, 1, 1);
+        map.addLocation(zone6, 1, 2);
+        map.addLocation(zone7, 1, 3);
+        map.addLocation(zone8, 2, 0);
+        map.addLocation(zone9, 2, 1);
+        map.addLocation(zone10, 2, 2);
+        map.addLocation(zone11, 2, 3);
+        map.addLocation(zone12, 3, 0);
+        map.addLocation(zone13, 3, 1);
+        map.addLocation(zone14, 3, 2);
+        map.addLocation(zone15, 3, 3);
     }
 
     private void initializeCommands() {
@@ -69,8 +99,10 @@ public class Game {
 
     public void run() {
         Scanner scanner = new Scanner(System.in);
+        System.out.println();
         System.out.println("Bienvenue dans le MedSerGame !");
-        System.out.println("Tapez 'help' pour afficher les commandes disponibles.\n");
+        System.out.println("Tapez 'help' pour afficher les commandes disponibles");
+        System.out.println("Tapez 'exit' pour quitter le jeu.......");
 
         map.setPlayerPosition(player.getPositionX(), player.getPositionY());
         printMap();
@@ -83,6 +115,7 @@ public class Game {
                 System.out.println("Merci d’avoir joué !");
                 break;
             }
+
             String[] parts = input.split(" ", 2);
             String commandKey = parts[0];
             String argument = parts.length > 1 ? parts[1] : null;
