@@ -8,19 +8,81 @@ public class Game {
     private Player player;
     private CommandRegistry commandRegistry;
     private boolean finished;
-    private List<String> commandHistory; // historique des commandes
+    private List<String> commandHistory = new ArrayList<>();
 
     public Game(WorldMap map, Player player, CommandRegistry commandRegistry) {
         this.map = map;
         this.player = player;
         this.commandRegistry = commandRegistry;
         this.finished = false;
-        this.commandHistory = new ArrayList<>();
 
         initializeMap();
         initializeCommands();
         map.setPlayerPosition(0, 0);
     }
+
+    // Historique de commandes pour la sauvegarde
+    public List<String> getCommandHistory() { return commandHistory; }
+
+    // Permet d'exécuter une commande (via saisie joueur ou via load)
+    public String processCommand(String input, boolean addToHistory) {
+        if (addToHistory) {
+            commandHistory.add(input);
+        }
+        String[] parts = input.trim().toLowerCase().split(" ", 2);
+        String commandKey = parts[0];
+        String argument = parts.length > 1 ? parts[1] : null;
+
+        ICommand command = commandRegistry.getCommand(commandKey);
+        if (command != null) {
+            if (command instanceof CommandMove && argument != null) {
+                ((CommandMove) command).setDirection(argument);
+            } else if (command instanceof CommandInspect && argument != null) {
+                ((CommandInspect) command).setObjectName(argument);
+            } else if (command instanceof CommandTake && argument != null) {
+                ((CommandTake) command).setObjectName(argument);
+            } else if (command instanceof CommandUse && argument != null) {
+                ((CommandUse) command).setObjectName(argument);
+            } else if (command instanceof CommandGuess && argument != null) {
+                ((CommandGuess) command).setAnswer(argument);
+            }
+            return command.execute(this);
+        } else {
+            return "Commande inconnue.";
+        }
+    }
+
+    public void run() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println();
+        System.out.println("Bienvenue dans le MedSerGame !");
+        System.out.println("Tapez 'help' pour afficher les commandes disponibles");
+        System.out.println("Tapez 'exit' pour quitter le jeu");
+        System.out.println("Tapez 'save' pour sauvegarder votre partie en cours");
+        System.out.println("Tapez 'load' pour récupérer votre dernière sauvegarde");
+
+
+        map.setPlayerPosition(player.getPositionX(), player.getPositionY());
+        printMap();
+
+        while (!finished) {
+            System.out.print("\n> ");
+            String input = scanner.nextLine().trim().toLowerCase();
+
+            if (input.equals("exit")) {
+                System.out.println("Merci d’avoir joué !");
+                break;
+            }
+
+            // On exécute la commande (et l'ajoute à l’historique)
+            String result = processCommand(input, true);
+            System.out.println(result);
+            printMap();
+        }
+        scanner.close();
+    }
+
+    // ---- INITIALISATION DE LA MAP ET DES COMMANDES ----
 
     private void initializeMap() {
         Location zone0 = new Location("Entrée du donjon", "Une porte massive bloque le passage.", 0, 0);
@@ -39,37 +101,37 @@ public class Game {
         Location zone13 = new Location("Chambre scellée", "Une pièce cachée derrière des symboles.", 3, 1);
         Location zone14 = new Location("Pont suspendu", "Un vieux pont qui grince sous vos pas.", 3, 2);
         Location zone15 = new Location("Observatoire", "Un télescope pointé vers les étoiles.", 3, 3);
-    
+
         // Objets libres
         zone0.addItem(new Cle("clé rouillée", "Une vieille clé rouillée.", false, "Observatoire"));
         zone3.addItem(new Object("épée émoussée", "Une épée peu tranchante.", false));
         zone7.addItem(new Cle("clé d'or et de platine", "Une clé prestigieuse.", false, "Sortie du donjon"));
-    
+
         // Zones verrouillées
         zone4.lock("clé du savoir");
         zone5.lock("clé du calcul");
         zone9.lock("clé du destin");
         zone15.lock("clé rouillée");
-       
+
         // Énigmes dans zones accessibles
         zone1.setEnigme(new Enigme(
             "Quel mot de 5 lettres devient plus court quand on y ajoute deux lettres ?",
             "court",
             new Cle("clé du savoir", "Clé gagnée pour avoir bien interprété un jeu de mots.", false, "Salle verrouillée")
         ));
-    
+
         zone2.setEnigme(new Enigme(
             "Résous : (8 / 2) * (2 + 2)",
             "16",
             new Cle("clé du calcul", "Clé donnée pour une résolution mathématique correcte.", false, "Corridor sombre")
         ));
-    
+
         zone6.setEnigme(new Enigme(
             "Je suis toujours devant toi mais tu ne peux jamais m’atteindre. Qui suis-je ?",
             "l'avenir",
             new Cle("clé du destin", "Clé mystérieuse liée au futur.", false, "Sortie du donjon")
         ));
-    
+
         // Ajout des zones à la carte
         map.addLocation(zone0, 0, 0);
         map.addLocation(zone1, 0, 1);
@@ -99,62 +161,7 @@ public class Game {
         commandRegistry.addCommand("guess", new CommandGuess("guess", "Résoudre une énigme pour obtenir une clé"));
         commandRegistry.addCommand("use", new CommandUse("use", "Permet d'utiliser une clé pour déverrouiller une zone"));
         commandRegistry.addCommand("save", new CommandSave("save", "Sauvegarde la partie"));
-    }
-
-    public void run() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println();
-        System.out.println("Bienvenue dans le MedSerGame !");
-        System.out.println("Tapez 'help' pour afficher les commandes disponibles");
-        System.out.println("Tapez 'exit' pour quitter le jeu.......");
-
-        map.setPlayerPosition(player.getPositionX(), player.getPositionY());
-        printMap();
-
-        while (!finished) {
-            System.out.print("\n> ");
-            String input = scanner.nextLine().trim().toLowerCase();
-
-            if (input.equals("exit")) {
-                System.out.println("Merci d’avoir joué !");
-                break;
-            }
-            // N'enregistre PAS les commandes "save" dans l'historique
-            if (!input.startsWith("save")) {
-                commandHistory.add(input);
-            }
-            processCommand(input, false);
-            printMap();
-        }
-        scanner.close();
-    }
-
-    // Nouvelle méthode pour exécuter une commande (pour le rechargement d'une sauvegarde)
-    public void processCommand(String input, boolean saveToHistory) {
-        if (input == null || input.isEmpty()) return;
-        String[] parts = input.split(" ", 2);
-        String commandKey = parts[0];
-        String argument = parts.length > 1 ? parts[1] : null;
-
-        // Ajoute à l'historique si demandé (et pas la commande save)
-        if (saveToHistory && !commandKey.equals("save")) commandHistory.add(input);
-
-        ICommand command = commandRegistry.getCommand(commandKey);
-        if (command != null) {
-            if (command instanceof CommandMove && argument != null) {
-                ((CommandMove) command).setDirection(argument);
-            } else if (command instanceof CommandInspect && argument != null) {
-                ((CommandInspect) command).setObjectName(argument);
-            } else if (command instanceof CommandTake && argument != null) {
-                ((CommandTake) command).setObjectName(argument);
-            } else if (command instanceof CommandUse && argument != null) {
-                ((CommandUse) command).setObjectName(argument);
-            } else if (command instanceof CommandGuess && argument != null) {
-                ((CommandGuess) command).setAnswer(argument);
-            }
-            String result = command.execute(this);
-            System.out.println(result);
-        }
+        commandRegistry.addCommand("load", new CommandLoad("load", "Charge la partie sauvegardée"));
     }
 
     public void printMap() {
@@ -187,5 +194,12 @@ public class Game {
     public Player getPlayer() { return player; }
     public CommandRegistry getCommandRegistry() { return commandRegistry; }
     public void setFinished(boolean finished) { this.finished = finished; }
-    public List<String> getCommandHistory() { return commandHistory; }
+
+    // Si tu veux un reset propre pour la commande load (optionnel)
+    public void resetGame() {
+        this.map = new WorldMap(4, 4, player);
+        this.commandHistory.clear();
+        initializeMap();
+        map.setPlayerPosition(0, 0);
+    }
 }
