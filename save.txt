@@ -1,0 +1,10 @@
+take clé rouillée
+help
+move s
+move s
+move d
+use clé rouillée
+move d
+use clé rouillée
+move d
+use clé rouillée

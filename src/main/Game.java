@@ -1,6 +1,6 @@
 package main;
 
-import java.util.Scanner;
+import java.util.*;
 
 public class Game {
 
@@ -8,12 +8,14 @@ public class Game {
     private Player player;
     private CommandRegistry commandRegistry;
     private boolean finished;
+    private List<String> commandHistory; // historique des commandes
 
     public Game(WorldMap map, Player player, CommandRegistry commandRegistry) {
         this.map = map;
         this.player = player;
         this.commandRegistry = commandRegistry;
         this.finished = false;
+        this.commandHistory = new ArrayList<>();
 
         initializeMap();
         initializeCommands();
@@ -47,10 +49,8 @@ public class Game {
         zone4.lock("clé du savoir");
         zone5.lock("clé du calcul");
         zone9.lock("clé du destin");
-        zone15.lock("clé du futur");
+        zone15.lock("clé rouillée");
        
-       
-    
         // Énigmes dans zones accessibles
         zone1.setEnigme(new Enigme(
             "Quel mot de 5 lettres devient plus court quand on y ajoute deux lettres ?",
@@ -98,6 +98,7 @@ public class Game {
         commandRegistry.addCommand("inspect", new CommandInspect("inspect", "Inspecter un objet dans l’inventaire"));
         commandRegistry.addCommand("guess", new CommandGuess("guess", "Résoudre une énigme pour obtenir une clé"));
         commandRegistry.addCommand("use", new CommandUse("use", "Permet d'utiliser une clé pour déverrouiller une zone"));
+        commandRegistry.addCommand("save", new CommandSave("save", "Sauvegarde la partie"));
     }
 
     public void run() {
@@ -118,33 +119,42 @@ public class Game {
                 System.out.println("Merci d’avoir joué !");
                 break;
             }
-
-            String[] parts = input.split(" ", 2);
-            String commandKey = parts[0];
-            String argument = parts.length > 1 ? parts[1] : null;
-
-            ICommand command = commandRegistry.getCommand(commandKey);
-            if (command != null) {
-                if (command instanceof CommandMove && argument != null) {
-                    ((CommandMove) command).setDirection(argument);
-                } else if (command instanceof CommandInspect && argument != null) {
-                    ((CommandInspect) command).setObjectName(argument);
-                } else if (command instanceof CommandTake && argument != null) {
-                    ((CommandTake) command).setObjectName(argument);
-                } else if (command instanceof CommandUse && argument != null) {
-                    ((CommandUse) command).setObjectName(argument);
-                } else if (command instanceof CommandGuess && argument != null) {
-                    ((CommandGuess) command).setAnswer(argument);
-                }
-
-                String result = command.execute(this);
-                System.out.println(result);
-                printMap();
-            } else {
-                System.out.println("Commande inconnue. Tapez 'help' pour les commandes disponibles.");
+            // N'enregistre PAS les commandes "save" dans l'historique
+            if (!input.startsWith("save")) {
+                commandHistory.add(input);
             }
+            processCommand(input, false);
+            printMap();
         }
         scanner.close();
+    }
+
+    // Nouvelle méthode pour exécuter une commande (pour le rechargement d'une sauvegarde)
+    public void processCommand(String input, boolean saveToHistory) {
+        if (input == null || input.isEmpty()) return;
+        String[] parts = input.split(" ", 2);
+        String commandKey = parts[0];
+        String argument = parts.length > 1 ? parts[1] : null;
+
+        // Ajoute à l'historique si demandé (et pas la commande save)
+        if (saveToHistory && !commandKey.equals("save")) commandHistory.add(input);
+
+        ICommand command = commandRegistry.getCommand(commandKey);
+        if (command != null) {
+            if (command instanceof CommandMove && argument != null) {
+                ((CommandMove) command).setDirection(argument);
+            } else if (command instanceof CommandInspect && argument != null) {
+                ((CommandInspect) command).setObjectName(argument);
+            } else if (command instanceof CommandTake && argument != null) {
+                ((CommandTake) command).setObjectName(argument);
+            } else if (command instanceof CommandUse && argument != null) {
+                ((CommandUse) command).setObjectName(argument);
+            } else if (command instanceof CommandGuess && argument != null) {
+                ((CommandGuess) command).setAnswer(argument);
+            }
+            String result = command.execute(this);
+            System.out.println(result);
+        }
     }
 
     public void printMap() {
@@ -177,4 +187,5 @@ public class Game {
     public Player getPlayer() { return player; }
     public CommandRegistry getCommandRegistry() { return commandRegistry; }
     public void setFinished(boolean finished) { this.finished = finished; }
+    public List<String> getCommandHistory() { return commandHistory; }
 }
