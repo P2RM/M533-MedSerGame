@@ -39,7 +39,7 @@ public class Game {
         Location zone15 = new Location("Observatoire", "Un télescope pointé vers les étoiles.", 3, 3);
     
         // Objets libres
-        zone0.addItem(new Cle("clé rouillée", "Une vieille clé rouillée.", false, "Salle verrouillée"));
+        zone0.addItem(new Cle("clé rouillée", "Une vieille clé rouillée.", false, "Observatoire"));
         zone3.addItem(new Object("épée émoussée", "Une épée peu tranchante.", false));
         zone7.addItem(new Cle("clé d'or et de platine", "Une clé prestigieuse.", false, "Sortie du donjon"));
     
@@ -47,6 +47,9 @@ public class Game {
         zone4.lock("clé du savoir");
         zone5.lock("clé du calcul");
         zone9.lock("clé du destin");
+        zone15.lock("clé du futur");
+       
+       
     
         // Énigmes dans zones accessibles
         zone1.setEnigme(new Enigme(
