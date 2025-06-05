@@ -19,33 +19,65 @@ public class Game {
         initializeMap();
         initializeCommands();
         map.setPlayerPosition(0, 0);
+
+        // Le point de départ est visité d’office
+        player.addLieuVisite(map.getPlayerLocation().getNom());
     }
 
     // Historique de commandes pour la sauvegarde
     public List<String> getCommandHistory() { return commandHistory; }
 
-    // Permet d'exécuter une commande (via saisie joueur ou via load)
-    public String processCommand(String input, boolean addToHistory) {
-        if (addToHistory) {
-            commandHistory.add(input);
+    // ---- Commande cachée/affichée dynamiquement ----
+    private void refreshTeleportCommand() {
+        boolean hasCrystal = player.hasItem("teleport crystal");
+        boolean alreadyAdded = commandRegistry.getCommand("teleport") != null;
+        if (hasCrystal && !alreadyAdded) {
+            commandRegistry.addCommand("teleport", new CommandTeleport("teleport", "Se téléporter vers un lieu déjà visité (si crystal possédé)"));
+        } else if (!hasCrystal && alreadyAdded) {
+            // Optionnel, tu peux l’enlever du registry si crystal perdu
+            commandRegistry.getAllCommands().remove("teleport");
         }
+    }
+
+    // Exécute une commande (mode manuel ou via sauvegarde)
+    public String processCommand(String input, boolean addToHistory) {
+        refreshTeleportCommand(); // Toujours à jour selon l’inventaire
+
+        if (addToHistory) commandHistory.add(input);
+
         String[] parts = input.trim().toLowerCase().split(" ", 2);
         String commandKey = parts[0];
         String argument = parts.length > 1 ? parts[1] : null;
 
         ICommand command = commandRegistry.getCommand(commandKey);
         if (command != null) {
+            // Spécifique à move (on enregistre la visite si c’est un vrai move/tp réussi)
             if (command instanceof CommandMove && argument != null) {
                 ((CommandMove) command).setDirection(argument);
-            } else if (command instanceof CommandInspect && argument != null) {
-                ((CommandInspect) command).setObjectName(argument);
-            } else if (command instanceof CommandTake && argument != null) {
-                ((CommandTake) command).setObjectName(argument);
-            } else if (command instanceof CommandUse && argument != null) {
-                ((CommandUse) command).setObjectName(argument);
-            } else if (command instanceof CommandGuess && argument != null) {
-                ((CommandGuess) command).setAnswer(argument);
+                String result = command.execute(this);
+                // Ajout du lieu visité si déplacement réussi
+                Location curr = map.getPlayerLocation();
+                if (curr != null) player.addLieuVisite(curr.getNom());
+                return result;
             }
+            // Spécifique à teleport
+            if (command instanceof CommandTeleport && argument != null) {
+                ((CommandTeleport) command).setLieuCible(argument);
+                String result = command.execute(this);
+                Location curr = map.getPlayerLocation();
+                if (curr != null) player.addLieuVisite(curr.getNom());
+                return result;
+            }
+            // Les autres commandes
+            if (command instanceof CommandInspect && argument != null)
+                ((CommandInspect) command).setObjectName(argument);
+            else if (command instanceof CommandTake && argument != null)
+                ((CommandTake) command).setObjectName(argument);
+            else if (command instanceof CommandUse && argument != null)
+                ((CommandUse) command).setObjectName(argument);
+            else if (command instanceof CommandGuess && argument != null)
+                ((CommandGuess) command).setAnswer(argument);
+
             return command.execute(this);
         } else {
             return "Commande inconnue.";
@@ -61,7 +93,6 @@ public class Game {
         System.out.println("Tapez 'save' pour sauvegarder votre partie en cours");
         System.out.println("Tapez 'load' pour récupérer votre dernière sauvegarde");
 
-
         map.setPlayerPosition(player.getPositionX(), player.getPositionY());
         printMap();
 
@@ -74,7 +105,6 @@ public class Game {
                 break;
             }
 
-            // On exécute la commande (et l'ajoute à l’historique)
             String result = processCommand(input, true);
             System.out.println(result);
             printMap();
@@ -106,6 +136,7 @@ public class Game {
         zone0.addItem(new Cle("clé rouillée", "Une vieille clé rouillée.", false, "Observatoire"));
         zone3.addItem(new Object("épée émoussée", "Une épée peu tranchante.", false));
         zone7.addItem(new Cle("clé d'or et de platine", "Une clé prestigieuse.", false, "Sortie du donjon"));
+        zone3.addItem(new Object("teleport crystal", "Un cristal étrange qui permet de se téléporter.", true));
 
         // Zones verrouillées
         zone4.lock("clé du savoir");
@@ -162,6 +193,7 @@ public class Game {
         commandRegistry.addCommand("use", new CommandUse("use", "Permet d'utiliser une clé pour déverrouiller une zone"));
         commandRegistry.addCommand("save", new CommandSave("save", "Sauvegarde la partie"));
         commandRegistry.addCommand("load", new CommandLoad("load", "Charge la partie sauvegardée"));
+        // TELEPORT n’est PAS ajoutée ici, elle l’est dynamiquement selon l’inventaire
     }
 
     public void printMap() {
@@ -195,7 +227,6 @@ public class Game {
     public CommandRegistry getCommandRegistry() { return commandRegistry; }
     public void setFinished(boolean finished) { this.finished = finished; }
 
-    // Si tu veux un reset propre pour la commande load (optionnel)
     public void resetGame() {
         this.map = new WorldMap(4, 4, player);
         this.commandHistory.clear();

@@ -31,4 +31,15 @@ public class Player {
             if (obj.getName().equalsIgnoreCase(name)) return obj;
         return null;
     }
+    private Set<String> lieuxVisites = new HashSet<>();
+
+public void addLieuVisite(String nom) {
+    lieuxVisites.add(nom.toLowerCase());
+}
+public boolean aVisite(String nom) {
+    return lieuxVisites.contains(nom.toLowerCase());
+}
+public Set<String> getLieuxVisites() {
+    return lieuxVisites;
+}
 }

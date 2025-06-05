@@ -41,7 +41,13 @@ public class CommandMove implements ICommand {
         Location target = game.getMap().getLocation(newX, newY);
         if (target == null) return "Il n'y a rien dans cette direction.";
         if (target.isLocked()) return "Zone verrouillée. Trouvez une clé.";
+
+        // Déplacement réussi : change la position du joueur
         game.getPlayer().setPosition(newX, newY);
+
+        // >>> Ajoute cette ligne pour enregistrer la visite
+        game.getPlayer().addLieuVisite(target.getNom());
+
         return target.getDescription();
     }
 }
