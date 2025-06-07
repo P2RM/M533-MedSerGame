@@ -56,6 +56,7 @@ public class CommandUse implements ICommand {
             Location loc = map.getLocation(nx, ny);
             if (loc != null && loc.isLocked() && loc.canUnlock(cle.getName())) {
                 loc.unlock();
+                game.getPlayer().getInventory().remove(cle);
                 return "Vous avez déverrouillé " + loc.getNom() + " avec la clé !";
             }
         }

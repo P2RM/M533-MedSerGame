@@ -1,5 +1,7 @@
 package main;
 
+import java.util.List;
+
 public class CommandLook implements ICommand {
 
     private String verb;
@@ -24,28 +26,31 @@ public class CommandLook implements ICommand {
     public String execute(Game game) {
         Location currentLocation = game.getMap().getPlayerLocation();
         if (currentLocation != null) {
-            StringBuilder sb = new StringBuilder();//txt qui va donner les infos de la zone
+            StringBuilder sb = new StringBuilder();
             sb.append("Vous êtes dans : ").append(currentLocation.getNom()).append("\n")
               .append(currentLocation.getDescription()).append("\nObjets présents : ");
 
-            boolean hasPrintedAny = false;
-
             if (currentLocation.getItems().isEmpty() && !currentLocation.hasEnigme()) {
-                sb.append("aucun");//si ya pas d'objets
+                sb.append("aucun");
             } else {
-                for (Object obj : currentLocation.getItems()) {
-                    sb.append(obj.getName()).append(" ");// si ya un objet -> nom
-                    hasPrintedAny = true;
+                List<Object> items = currentLocation.getItems();
+                if (!items.isEmpty()) {
+                    for (int i = 0; i < items.size(); i++) {
+                        sb.append(items.get(i).getName());
+                        if (i < items.size() - 1) {
+                            sb.append(" / ");
+                        }
+                    }
                 }
-
                 if (currentLocation.hasEnigme()) {
-                    sb.append("[Énigme]");//si ya une enigme
+                    if (!items.isEmpty()) sb.append(" / ");
+                    sb.append("[Énigme]");
                 }
             }
 
             return sb.toString();
         } else {
-            return "Vous n'êtes dans aucune salle valide.";//si salle null
+            return "Vous n'êtes dans aucune salle valide.";
         }
     }
 }
