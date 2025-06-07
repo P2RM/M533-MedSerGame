@@ -24,28 +24,28 @@ public class CommandLook implements ICommand {
     public String execute(Game game) {
         Location currentLocation = game.getMap().getPlayerLocation();
         if (currentLocation != null) {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();//txt qui va donner les infos de la zone
             sb.append("Vous êtes dans : ").append(currentLocation.getNom()).append("\n")
               .append(currentLocation.getDescription()).append("\nObjets présents : ");
 
             boolean hasPrintedAny = false;
 
             if (currentLocation.getItems().isEmpty() && !currentLocation.hasEnigme()) {
-                sb.append("aucun");
+                sb.append("aucun");//si ya pas d'objets
             } else {
                 for (Object obj : currentLocation.getItems()) {
-                    sb.append(obj.getName()).append(" ");
+                    sb.append(obj.getName()).append(" ");// si ya un objet -> nom
                     hasPrintedAny = true;
                 }
 
                 if (currentLocation.hasEnigme()) {
-                    sb.append("[Énigme]");
+                    sb.append("[Énigme]");//si ya une enigme
                 }
             }
 
             return sb.toString();
         } else {
-            return "Vous n'êtes dans aucune salle valide.";
+            return "Vous n'êtes dans aucune salle valide.";//si salle null
         }
     }
 }

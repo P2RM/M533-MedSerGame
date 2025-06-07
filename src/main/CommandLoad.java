@@ -1,9 +1,9 @@
 package main;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
-import java.io.IOException;
 
 public class CommandLoad implements ICommand {
     private String verb;
@@ -24,10 +24,10 @@ public class CommandLoad implements ICommand {
         String SAVE_FILENAME = "save.txt";
         try {
             List<String> lignes = Files.readAllLines(Paths.get(SAVE_FILENAME));
-            game.resetGame(); // à toi d’implémenter un reset() si besoin !
+            game.resetGame();
             for (String ligne : lignes) {
                 if (!ligne.trim().isEmpty()) {
-                    game.processCommand(ligne, false); // false = n’ajoute pas à l’historique
+                    game.processCommand(ligne, false); // si c'est faux, ça ajoute pas à l'historique
                 }
             }
             return "Partie chargée depuis " + SAVE_FILENAME;

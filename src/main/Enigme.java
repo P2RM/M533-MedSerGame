@@ -5,7 +5,7 @@ public class Enigme {
     private String answer;
     private Object reward;
 
-    // ✅ Constructeur complet attendu
+    
     public Enigme(String question, String answer, Object reward) {
         this.question = question;
         this.answer = answer.toLowerCase();

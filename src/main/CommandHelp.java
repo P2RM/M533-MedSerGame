@@ -17,14 +17,14 @@ public class CommandHelp implements ICommand {
     public String getDescription() { return description; }
 
 
-    //Méthode qui retourne la chaine de caracteres complete de toutes les commandes disponibles 
+    //retourne les commandes
     @Override
     public String execute(Game game) {
         StringBuilder result = new StringBuilder("Commandes disponibles :\n");
         Set<String> verbs = game.getCommandRegistry().getAllCommands();
         for (String v : verbs) {
             ICommand cmd = game.getCommandRegistry().getCommand(v);
-            result.append("- ").append(v).append(" : ").append(cmd.getDescription()).append("\n");
+            result.append("- ").append(v).append(" : ").append(cmd.getDescription()).append("\n");//De Pierre pour Raulito : append c'est pr mettre qqch à la fin d'un string
         }
         return result.toString();
     }

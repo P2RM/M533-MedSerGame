@@ -21,7 +21,7 @@ public class Player {
     public List<Object> getInventory() { return inventory; }
 
     public void addItem(Object item) { inventory.add(item); }
-    public boolean hasItem(String itemName) {
+    public boolean hasItem(String itemName) {//vérifie si l'objet est dans notre inventaire.
         for (Object obj : inventory)
             if (obj.getName().equalsIgnoreCase(itemName)) return true;
         return false;

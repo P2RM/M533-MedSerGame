@@ -39,10 +39,10 @@ public class CommandTake implements ICommand {
             return "Cet objet n'est pas présent ici.";
         }
 
-        currentLocation.removeItem(obj);
-        game.getPlayer().addItem(obj);
+        currentLocation.removeItem(obj);//enleve l'objet
+        game.getPlayer().addItem(obj);//ajoute à l'inventaire
 
-        // *** NE PAS déverrouiller ici ! ***
+       
 
         return "Vous avez ramassé : " + obj.getName();
     }

@@ -30,7 +30,7 @@ public class CommandGuess implements ICommand {
     public String execute(Game game) {
         Location location = game.getMap().getPlayerLocation();
 
-        // Aucune énigme ici
+        // Si ya pas d'énigmes
         if (location == null || !location.hasEnigme()) {
             answer = null; // reset
             return "Il n'y a pas d'énigme ici.";
@@ -38,12 +38,12 @@ public class CommandGuess implements ICommand {
 
         Enigme enigme = location.getEnigme();
 
-        // Si aucune réponse n’est fournie
+        // Si ya l'utilisateur ne met pas de réponses
         if (answer == null || answer.isEmpty()) {
             return "Énigme :\n" + enigme.getQuestion();
         }
 
-        // Vérifie la réponse
+        // Pour vérifier
         if (enigme.isCorrect(answer)) {
             Object reward = enigme.getReward();
 
@@ -51,11 +51,11 @@ public class CommandGuess implements ICommand {
                 game.getPlayer().addItem(reward);
             }
 
-            location.setEnigme(null); // l’énigme est résolue
-            answer = null; // reset pour les prochaines énigmes
+            location.setEnigme(null); // résolution enigme
+            answer = null;
             return "Bonne réponse ! Vous obtenez : " + reward.getName();
         } else {
-            answer = null; // reset pour réessayer proprement
+            answer = null;
             return "Mauvaise réponse. Réessayez.";
         }
     }

@@ -6,7 +6,7 @@ public class Main {
         WorldMap map = new WorldMap(4, 4, player);
         CommandRegistry commandRegistry = new CommandRegistry();
 
-        // Enregistrement de toutes les commandes
+        //de raul pr romain : toutes nos commandes
         commandRegistry.addCommand("help", new CommandHelp("help", "Affiche la liste des commandes disponibles"));
         commandRegistry.addCommand("move", new CommandMove("move", "Déplace le joueur dans une direction"));
         commandRegistry.addCommand("take", new CommandTake("take", "Ramasse un objet présent dans la pièce"));

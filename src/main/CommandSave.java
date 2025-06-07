@@ -23,6 +23,7 @@ public class CommandSave implements ICommand {
     public String execute(Game game) {
         String SAVE_FILENAME = "save.txt";
         List<String> history = game.getCommandHistory();
+        //code du prof adapté
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(SAVE_FILENAME))) {
             for (String line : history) {
                 writer.write(line);
@@ -30,7 +31,7 @@ public class CommandSave implements ICommand {
             }
             return "Partie sauvegardée dans " + SAVE_FILENAME;
         } catch (IOException e) {
-            return "Erreur lors de la sauvegarde : " + e.getMessage();
+            return "Erreur lors de la sauvegarde : " + e.getMessage();//renvoies le message qui correpond à l'erreur
         }
     }
 }

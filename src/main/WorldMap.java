@@ -13,7 +13,7 @@ public class WorldMap {
         grid[y][x] = loc;
     }
 
-    public boolean isInBounds(int x, int y) {
+    public boolean isInBounds(int x, int y) {// si c dans les limites
         return (y >= 0 && y < grid.length && x >= 0 && x < grid[0].length);
     }
 

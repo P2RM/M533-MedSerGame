@@ -12,7 +12,7 @@ public class CommandTeleport implements ICommand {
         this.lieuCible = null;
     }
 
-    public void setLieuCible(String lieu) {
+    public void setLieuCible(String lieu) {//lieu sur lequel on va
         this.lieuCible = lieu;
     }
 
@@ -24,19 +24,19 @@ public class CommandTeleport implements ICommand {
 
     @Override
     public String execute(Game game) {
-        // 1. Le crystal doit être possédé
+        //faut avoir le crystal
         if (!game.getPlayer().hasItem("teleport crystal")) {
             return "Vous n'avez pas le teleport crystal ! Impossible de vous téléporter.";
         }
-        // 2. Argument : nom du lieu
-        if (lieuCible == null || lieuCible.isEmpty()) {
+        
+        if (lieuCible == null || lieuCible.isEmpty()) {//nom du lieu
             return "Utilisation : teleport nom-du-lieu";
         }
-        // 3. Vérifier si le lieu a été visité
+        //Vérif si lieu a été visité
         if (!game.getPlayer().aVisite(lieuCible)) {
             return "Vous n'avez pas encore visité ce lieu. Impossible de s'y téléporter.";
         }
-        // 4. Chercher le lieu sur la map
+        //chercher le lieu sur la map
         Location destination = null;
         for (Location[] row : game.getMap().getPrintableGrid()) {
             for (Location loc : row) {
@@ -50,9 +50,9 @@ public class CommandTeleport implements ICommand {
         if (destination == null) {
             return "Ce lieu n'existe pas.";
         }
-        // 5. Déplacer le joueur
-        game.getPlayer().setPosition(destination.getX(), destination.getY());
-        // Marquer la salle comme visitée à nouveau
+        
+        game.getPlayer().setPosition(destination.getX(), destination.getY());//le joueur se déplace
+        // salle = visitée à nouveau
         game.getPlayer().addLieuVisite(destination.getNom());
         return "Téléportation réussie ! Vous êtes maintenant dans : " + destination.getNom() + ".\n" + destination.getDescription();
     }

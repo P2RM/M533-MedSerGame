@@ -37,7 +37,7 @@ public class CommandInspect implements ICommand {
             for (Object obj : game.getPlayer().getInventory()) {
                 sb.append("- ").append(obj.getName()).append("\n");
             }
-            return sb.toString();
+            return sb.toString();//liste l'inventaire avec un objet après le trait
         } else {
             Object obj = game.getPlayer().getItemByName(objectName);
             if (obj == null) {

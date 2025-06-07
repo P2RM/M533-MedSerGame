@@ -32,7 +32,7 @@ public class CommandUse implements ICommand {
             return "Quel objet voulez-vous utiliser ?";
         }
 
-        // Vérifie que l'objet est dans l'inventaire
+        // check si objet dans l'inventaire
         Object obj = game.getPlayer().getItemByName(objectName);
         if (obj == null) {
             return "Vous n'avez pas cet objet dans votre inventaire.";
@@ -42,17 +42,17 @@ public class CommandUse implements ICommand {
         }
         Cle cle = (Cle) obj;
 
-        // Récupère la position du joueur
+        // récup la position du joueur
         int x = game.getPlayer().getPositionX();
         int y = game.getPlayer().getPositionY();
         WorldMap map = game.getMap();
 
-        // Vérifie les 4 cases autour du joueur (haut, bas, gauche, droite)
+        // Vérifie les zones adjacentes pr les ouvrir avec la clé
         int[][] directions = { {1,0}, {-1,0}, {0,1}, {0,-1} };
         for (int[] dir : directions) {
             int nx = x + dir[0];
             int ny = y + dir[1];
-            if (!map.isInBounds(nx, ny)) continue;
+            if (!map.isInBounds(nx, ny)) continue;//si c ds les limites ça continue
             Location loc = map.getLocation(nx, ny);
             if (loc != null && loc.isLocked() && loc.canUnlock(cle.getName())) {
                 loc.unlock();
@@ -60,7 +60,7 @@ public class CommandUse implements ICommand {
             }
         }
 
-        // Si aucune salle verrouillée à proximité n'est trouvée
+        // si pas à coté d'une salle vérouillée
         return "Aucune zone à déverrouiller ici avec cette clé.";
     }
 }

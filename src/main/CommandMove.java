@@ -24,14 +24,14 @@ public class CommandMove implements ICommand {
 
     @Override
     public String execute(Game game) {
-        List<String> validDirections = Arrays.asList("w", "a", "s", "d");
+        List<String> validDirections = Arrays.asList("w", "a", "s", "d");//liste des directions
         if (direction == null || !validDirections.contains(direction)) {
             return "Utilisez 'move w', 'move a', 'move s' ou 'move d' (haut, gauche, bas, droite).";
         }
         int x = game.getPlayer().getPositionX();
         int y = game.getPlayer().getPositionY();
         int newX = x, newY = y;
-        switch (direction) {
+        switch (direction) {//pour les directions
             case "w": newY--; break;
             case "s": newY++; break;
             case "a": newX--; break;
@@ -42,10 +42,10 @@ public class CommandMove implements ICommand {
         if (target == null) return "Il n'y a rien dans cette direction.";
         if (target.isLocked()) return "Zone verrouillée. Trouvez une clé.";
 
-        // Déplacement réussi : change la position du joueur
+        // déplacement OK donc on change de position
         game.getPlayer().setPosition(newX, newY);
 
-        // >>> Ajoute cette ligne pour enregistrer la visite
+        
         game.getPlayer().addLieuVisite(target.getNom());
 
         return target.getDescription();

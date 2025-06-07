@@ -22,7 +22,7 @@ public class CommandMap implements ICommand {
         return description;
     }
 
-    @Override
+    @Override// (de Raul) : mini-map "morpion" et Map via la commande Map avec position actuelle
     public String execute(Game game) {
         int posX = game.getPlayer().getPositionX();
         int posY = game.getPlayer().getPositionY();

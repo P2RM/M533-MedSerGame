@@ -20,47 +20,47 @@ public class Game {
         initializeCommands();
         map.setPlayerPosition(0, 0);
 
-        // Le point de départ est visité d’office
+        // zone de départ = visitée
         player.addLieuVisite(map.getPlayerLocation().getNom());
     }
 
-    // Historique de commandes pour la sauvegarde
+    
     public List<String> getCommandHistory() { return commandHistory; }
 
-    // ---- Commande cachée/affichée dynamiquement ----
+    //s'affiche seulement qd on a le crystal
     private void refreshTeleportCommand() {
         boolean hasCrystal = player.hasItem("teleport crystal");
         boolean alreadyAdded = commandRegistry.getCommand("teleport") != null;
         if (hasCrystal && !alreadyAdded) {
             commandRegistry.addCommand("teleport", new CommandTeleport("teleport", "Se téléporter vers un lieu déjà visité (si crystal possédé)"));
         } else if (!hasCrystal && alreadyAdded) {
-            // Optionnel, tu peux l’enlever du registry si crystal perdu
+           
             commandRegistry.getAllCommands().remove("teleport");
         }
     }
 
-    // Exécute une commande (mode manuel ou via sauvegarde)
+    
     public String processCommand(String input, boolean addToHistory) {
-        refreshTeleportCommand(); // Toujours à jour selon l’inventaire
+        refreshTeleportCommand(); //se met a jour en fonction de l'avancée
 
         if (addToHistory) commandHistory.add(input);
 
-        String[] parts = input.trim().toLowerCase().split(" ", 2);
-        String commandKey = parts[0];
-        String argument = parts.length > 1 ? parts[1] : null;
+        String[] parts = input.trim().toLowerCase().split(" ", 2); //sépare commande et l'argument si yen a un.
+        String commandKey = parts[0];// de romain pr pierre : correspond au verb genre "aller" ou "prendre"
+        String argument = parts.length > 1 ? parts[1] : null;// si y a une suite genre objet
 
         ICommand command = commandRegistry.getCommand(commandKey);
         if (command != null) {
-            // Spécifique à move (on enregistre la visite si c’est un vrai move/tp réussi)
+            
             if (command instanceof CommandMove && argument != null) {
                 ((CommandMove) command).setDirection(argument);
                 String result = command.execute(this);
-                // Ajout du lieu visité si déplacement réussi
+                // si dép réussi on ajoute a lieu visité
                 Location curr = map.getPlayerLocation();
                 if (curr != null) player.addLieuVisite(curr.getNom());
                 return result;
             }
-            // Spécifique à teleport
+            // pr teleport
             if (command instanceof CommandTeleport && argument != null) {
                 ((CommandTeleport) command).setLieuCible(argument);
                 String result = command.execute(this);
@@ -68,7 +68,7 @@ public class Game {
                 if (curr != null) player.addLieuVisite(curr.getNom());
                 return result;
             }
-            // Les autres commandes
+           
             if (command instanceof CommandInspect && argument != null)
                 ((CommandInspect) command).setObjectName(argument);
             else if (command instanceof CommandTake && argument != null)
@@ -84,7 +84,7 @@ public class Game {
         }
     }
 
-    public void run() {
+    public void run() {//pr le fonctionnement
         Scanner scanner = new Scanner(System.in);
         System.out.println();
         System.out.println("Bienvenue dans le MedSerGame !");
@@ -112,7 +112,7 @@ public class Game {
         scanner.close();
     }
 
-    // ---- INITIALISATION DE LA MAP ET DES COMMANDES ----
+    
 
     private void initializeMap() {
         Location zone0 = new Location("Entrée du donjon", "Une porte massive bloque le passage.", 0, 0);

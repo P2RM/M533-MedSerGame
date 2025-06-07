@@ -10,7 +10,7 @@ public class Location implements IPrintable {
     private boolean locked;
     private String requiredKey;
     
-    // Nouveau : une vraie énigme
+    
     private Enigme enigme;
 
     public Location(String nom, String description, int x, int y) {
