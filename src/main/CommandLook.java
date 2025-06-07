@@ -26,7 +26,7 @@ public class CommandLook implements ICommand {
     public String execute(Game game) {
         Location currentLocation = game.getMap().getPlayerLocation();
         if (currentLocation != null) {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder(); //txt qui va donner les infos de la zone
             sb.append("Vous êtes dans : ").append(currentLocation.getNom()).append("\n")
               .append(currentLocation.getDescription()).append("\nObjets présents : ");
 
