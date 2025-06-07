@@ -1,6 +1,7 @@
 package main;
 import java.util.*;
 import utils.IPrintable;
+import utils.TextUtils;
 
 public class Location implements IPrintable {
     private String nom;
@@ -26,7 +27,7 @@ public class Location implements IPrintable {
 
     public Object getItemByName(String name) {
         for (Object obj : items) {
-            if (obj.getName().equalsIgnoreCase(name)) return obj;
+            if (TextUtils.normalize(obj.getName()).equals(TextUtils.normalize(name))) return obj;
         }
         return null;
     }
@@ -46,7 +47,7 @@ public class Location implements IPrintable {
     public boolean isLocked() { return locked; }
 
     public boolean canUnlock(String key) {
-        return locked && requiredKey != null && requiredKey.equalsIgnoreCase(key);
+        return locked && requiredKey != null && TextUtils.normalize(requiredKey).equals(TextUtils.normalize(key));
     }
 
     public void unlock() { this.locked = false; this.requiredKey = null; }

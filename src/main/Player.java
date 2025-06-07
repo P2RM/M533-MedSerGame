@@ -1,5 +1,6 @@
 package main;
 import java.util.*;
+import utils.TextUtils;
 
 public class Player {
     private String name;
@@ -21,14 +22,16 @@ public class Player {
     public List<Object> getInventory() { return inventory; }
 
     public void addItem(Object item) { inventory.add(item); }
-    public boolean hasItem(String itemName) {//vérifie si l'objet est dans notre inventaire.
+    public boolean hasItem(String itemName) { //vérifie si l'objet est dans notre inventaire.
+        String search = TextUtils.normalize(itemName);
         for (Object obj : inventory)
-            if (obj.getName().equalsIgnoreCase(itemName)) return true;
+            if (TextUtils.normalize(obj.getName()).equals(search)) return true;
         return false;
     }
     public Object getItemByName(String name) {
+        String search = TextUtils.normalize(name);
         for (Object obj : inventory)
-            if (obj.getName().equalsIgnoreCase(name)) return obj;
+            if (TextUtils.normalize(obj.getName()).equals(search)) return obj;
         return null;
     }
     private Set<String> lieuxVisites = new HashSet<>();
